@@ -1,4 +1,4 @@
-import { Currency } from '../src/Currency'
+import { Currency } from "../src/Currency"
 import { MoneyCalculator } from '../src/MoneyCalculator'
 
 describe('Money', function () {
