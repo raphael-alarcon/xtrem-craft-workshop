@@ -5,6 +5,10 @@
     "target": "es2019",
     "esModuleInterop": true,
     "allowJs": false,
+    "paths":{
+      "@/":["./src/"],
+      "@tests/":["./tests/"],
+    }
   },
   "files": [
     "node_modules/jest-extended/types/index.d.ts",

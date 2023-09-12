@@ -5,35 +5,47 @@ export class Bank {
   private readonly _exchangeRates: Map<string, number> = new Map()
 
   /**
-   * @param currency1
-   * @param currency2
-   * @param rate
+   * Create a new bank with an exchange rate between two currency 
+   * 
+   * @param currentCurrency 
+   * @param convertedCurrency 
+   * @param rate 
+   * 
+   * @returns {Bank}
    */
-  static withExchangeRate (currency1: Currency, currency2: Currency, rate: number): Bank {
+  static withExchangeRate (currentCurrency: Currency, convertedCurrency: Currency, rate: number): Bank {
     const bank = new Bank()
-    bank.AddExchangeRate(currency1, currency2, rate)
+    bank.addExchangeRate(currentCurrency, convertedCurrency, rate)
     return bank
   }
 
   /**
-   * @param currency1
-   * @param currency2
+   * Add an exchange rate to the bank
+   * 
+   * @param currentCurrency
+   * @param convertedCurrency
    * @param rate
    */
-  AddExchangeRate (currency1: Currency, currency2: Currency, rate: number): void {
-    this._exchangeRates.set(currency1 + '->' + currency2, rate)
+  addExchangeRate (currentCurrency: Currency, convertedCurrency: Currency, rate: number): void {
+    this._exchangeRates.set(currentCurrency + '->' + convertedCurrency, rate)
   }
 
   /**
+   * convert a currency in another one 
+   * 
    * @param amount
-   * @param currency1
-   * @param currency2
+   * @param currentCurrency
+   * @param convertedCurrency
+   * 
+   * @return {number} the convertion result 
    */
-  Convert (amount: number, currency1: Currency, currency2: Currency): number {
-    if (!(currency1 === currency2 || this._exchangeRates.has(currency1 + '->' + currency2))) { throw new MissingExchangeRateError(currency1, currency2) }
+  convert (amount: number, currentCurrency: Currency, convertedCurrency: Currency): number {
+    if (currentCurrency !== convertedCurrency || this._exchangeRates.has(currentCurrency + '->' + convertedCurrency)) { 
+      throw new MissingExchangeRateError(currentCurrency, convertedCurrency) 
+   }
 
-    return currency2 === currency1
+    return convertedCurrency === currentCurrency
         ? amount
-        : amount * this._exchangeRates.get(currency1 + '->' + currency2)
+        : amount * this._exchangeRates.get(currentCurrency + '->' + convertedCurrency)
   }
 }
