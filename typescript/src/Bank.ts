@@ -1,5 +1,5 @@
-import {Currency} from './Currency'
-import {MissingExchangeRateError} from './MissingExchangeRateError'
+import { Currency } from './Currency'
+import { MissingExchangeRateError } from './MissingExchangeRateError'
 
 export class Bank {
   private readonly _exchangeRates: Map<string, number> = new Map()
@@ -13,7 +13,7 @@ export class Bank {
    * 
    * @returns {Bank}
    */
-  static withExchangeRate (currentCurrency: Currency, convertedCurrency: Currency, rate: number): Bank {
+  static withExchangeRate(currentCurrency: Currency, convertedCurrency: Currency, rate: number): Bank {
     const bank = new Bank()
     bank.addExchangeRate(currentCurrency, convertedCurrency, rate)
     return bank
@@ -26,7 +26,7 @@ export class Bank {
    * @param convertedCurrency
    * @param rate
    */
-  addExchangeRate (currentCurrency: Currency, convertedCurrency: Currency, rate: number): void {
+  addExchangeRate(currentCurrency: Currency, convertedCurrency: Currency, rate: number): void {
     this._exchangeRates.set(currentCurrency + '->' + convertedCurrency, rate)
   }
 
@@ -39,13 +39,11 @@ export class Bank {
    * 
    * @return {number} the convertion result 
    */
-  convert (amount: number, currentCurrency: Currency, convertedCurrency: Currency): number {
-    if (currentCurrency !== convertedCurrency || this._exchangeRates.has(currentCurrency + '->' + convertedCurrency)) { 
-      throw new MissingExchangeRateError(currentCurrency, convertedCurrency) 
-   }
+  convert(amount: number, currentCurrency: Currency, convertedCurrency: Currency): number {
+    if (!(currentCurrency === convertedCurrency || this._exchangeRates.has(currentCurrency + '->' + convertedCurrency))) { throw new MissingExchangeRateError(currentCurrency, convertedCurrency) }
 
     return convertedCurrency === currentCurrency
-        ? amount
-        : amount * this._exchangeRates.get(currentCurrency + '->' + convertedCurrency)
+      ? amount
+      : amount * this._exchangeRates.get(currentCurrency + '->' + convertedCurrency)
   }
 }
