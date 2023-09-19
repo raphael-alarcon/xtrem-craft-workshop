@@ -4,16 +4,19 @@ import { MoneyCalculator } from '../src/MoneyCalculator'
 describe('Money', function () {
   test('add in usd returns number', () => {
     const sum = MoneyCalculator.Add(5, Currency.USD, 10)
+    expect(sum).toBe(15)
+  })
+
+  test('divide in usd returns number', () => {
+    const sum = MoneyCalculator.Divide(6, Currency.USD, 2)
     
-    expect(sum).toBeNumber()
-    expect(sum).not.toBeNull()
-    //expect(sum).toBe(15)
+    expect(sum).toBe(3)
   })
 
   test('multiply in eur returns positive number', () => {
     const sum = MoneyCalculator.Times(10, Currency.EUR, 2)
     
-    expect(sum).toBeGreaterThan(0)
+    expect(sum).toBe(20)
   })
 
   test('divide in korean won returns number', () => {
