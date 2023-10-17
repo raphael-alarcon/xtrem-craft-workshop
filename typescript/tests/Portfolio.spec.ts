@@ -72,4 +72,16 @@ describe('Portfolio', function () {
     expect(evaluation).toBe(40)
   })
 
+  test('5 EUR + 10 USD = 26 USD', () => {
+    const portfolio = new Portfolio()
+    const bank = Bank.withExchangeRate(Currency.EUR,Currency.KRW,1.2)
+    bank.addExchangeRate(Currency.USD,Currency.KRW,2)
+    portfolio.add(5,Currency.EUR)
+    portfolio.add(10,Currency.USD)
+    
+    const evaluation = portfolio.evaluate(Currency.KRW,bank)
+
+    expect(evaluation).toBe(26)
+  })
+
 })
