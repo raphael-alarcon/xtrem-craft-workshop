@@ -14,6 +14,9 @@ class Portfolio{
     
     evaluate(currency :Currency ,bank:Bank ): number{
         return this.wallet.reduce((acc,curr)=>{
+            if(curr.currency !== currency){
+                return acc+bank.convert(curr.amount,curr.currency,currency)
+            }
             return acc+curr.amount;
         },0)
         
@@ -43,8 +46,8 @@ describe('Portfolio', function () {
     expect(evaluation).toBe(17)
   })
 
-/*
-  test('5 EUR + 10 USD = 17 USD', () => {
+
+  test('5 EUR + 10 USD = 16 USD', () => {
     const portfolio = new Portfolio()
     const bank = Bank.withExchangeRate(Currency.EUR,Currency.USD,1.2)
     portfolio.add(5,Currency.EUR)
@@ -52,7 +55,34 @@ describe('Portfolio', function () {
 
     const evaluation = portfolio.evaluate(Currency.USD,bank)
 
-    expect(evaluation).toBe(17)
+    expect(evaluation).toBe(16)
   })
-*/
+
+
+  test('5 EUR + 10 USD  + 12 KRW = 40 USD', () => {
+    const portfolio = new Portfolio()
+    const bank = Bank.withExchangeRate(Currency.EUR,Currency.USD,1.2)
+    bank.addExchangeRate(Currency.KRW,Currency.USD,2)
+    portfolio.add(5,Currency.EUR)
+    portfolio.add(10,Currency.USD)
+    portfolio.add(12,Currency.KRW)
+    
+    const evaluation = portfolio.evaluate(Currency.USD,bank)
+
+    expect(evaluation).toBe(40)
+  })
+
+  test('5 EUR + 10 USD  + 12 KRW = 40 USD', () => {
+    const portfolio = new Portfolio()
+    const bank = Bank.withExchangeRate(Currency.EUR,Currency.USD,1.2)
+    bank.addExchangeRate(Currency.KRW,Currency.EUR,2)
+    portfolio.add(5,Currency.EUR)
+    portfolio.add(10,Currency.USD)
+    portfolio.add(12,Currency.KRW)
+    
+    const evaluation = portfolio.evaluate(Currency.USD,bank)
+
+    expect(evaluation).toBe(40)
+  })
+
 })
