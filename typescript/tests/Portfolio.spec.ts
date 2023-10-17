@@ -17,6 +17,15 @@ class Portfolio{
     }
     
     evaluate(currency :Currency ,bank:Bank ):number{
+        var res=0
+        for (let key of this.wallet.keys())
+        {
+            if(key == currency){
+                res += this.wallet.get(key)
+            }else{
+                
+            }
+        }
         return 15
     }
 }
