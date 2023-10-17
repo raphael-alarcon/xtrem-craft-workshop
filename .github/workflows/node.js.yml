@@ -13,9 +13,10 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    env:
-      working-directory: ./typescript
-
+    defaults:
+      run:
+        working-directory: typescript
+    
     strategy:
       matrix:
         node-version: [14.x, 16.x, 18.x]
@@ -27,7 +28,6 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-        working-directory: ${{env.working-directory}}
         cache: 'npm'
     - run: npm ci
     - run: npm run build --if-present
