@@ -2,31 +2,21 @@ import { Currency } from '../src/Currency'
 import { Bank } from '../src/Bank'
 import { MissingExchangeRateError } from '../src/MissingExchangeRateError'
 import { map } from 'fp-ts/lib/Functor'
+import { threadId } from 'worker_threads'
 
 
 class Portfolio{
-    private readonly wallet: Map<Currency, number> = new Map()
+    private wallet = []
 
     add(amount: number, currency: Currency) {
-        if(this.wallet.has(currency)){
-            this.wallet[currency]=this.wallet.get(currency) + amount
-        }
-        else{
-            this.wallet.set(currency,amount)
-        }
+      this.wallet.push({amount:amount,currency:currency})
     }
     
-    evaluate(currency :Currency ,bank:Bank ):number{
-        var res=0
-        for (let key of this.wallet.keys())
-        {
-            if(key == currency){
-                res += this.wallet.get(key)
-            }else{
-                
-            }
-        }
-        return 15
+    evaluate(currency :Currency ,bank:Bank ): number{
+        return this.wallet.reduce((acc,curr)=>{
+            return acc+curr.amount;
+        },0)
+        
     }
 }
 
@@ -45,7 +35,7 @@ describe('Portfolio', function () {
   test('7 USD + 10 USD = 17 USD', () => {
     const portfolio = new Portfolio()
     const bank = Bank.withExchangeRate(Currency.EUR,Currency.USD,1.2)
-    portfolio.add(5,Currency.USD)
+    portfolio.add(7,Currency.USD)
     portfolio.add(10,Currency.USD)
 
     const evaluation = portfolio.evaluate(Currency.USD,bank)
