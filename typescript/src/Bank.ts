@@ -1,3 +1,4 @@
+import { Money } from '../tests/Money.spec'
 import { Currency } from './Currency'
 import { MissingExchangeRateError } from './MissingExchangeRateError'
 
@@ -27,7 +28,8 @@ export class Bank {
    * @param rate
    */
   addExchangeRate(currentCurrency: Currency, convertedCurrency: Currency, rate: number): void {
-    this._exchangeRates.set(currentCurrency + '->' + convertedCurrency, rate)
+    const money: Money = new Money(rate, currentCurrency);
+    this._exchangeRates.set(money.currency + '->' + convertedCurrency, money.amount)
   }
 
   /**
@@ -39,11 +41,11 @@ export class Bank {
    * 
    * @return {number} the convertion result 
    */
-  convert(amount: number, currentCurrency: Currency, convertedCurrency: Currency): number {
-    if (!(currentCurrency === convertedCurrency || this._exchangeRates.has(currentCurrency + '->' + convertedCurrency))) { throw new MissingExchangeRateError(currentCurrency, convertedCurrency) }
+  convert(convertedCurrency: Currency, money: Money): number {
+    if (!(money.currency === convertedCurrency || this._exchangeRates.has(money.currency + '->' + convertedCurrency))) { throw new MissingExchangeRateError(money.currency, convertedCurrency) }
 
-    return convertedCurrency === currentCurrency
-      ? amount
-      : amount * this._exchangeRates.get(currentCurrency + '->' + convertedCurrency)
+    return convertedCurrency === money.currency
+      ? money.amount
+      : money.amount * this._exchangeRates.get(money.currency + '->' + convertedCurrency)
   }
 }

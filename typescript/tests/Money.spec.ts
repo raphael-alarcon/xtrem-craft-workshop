@@ -13,8 +13,8 @@ export class DifferentCurrencyError extends Error {
 
 export class Money {
 
-    private amount: number;
-    private currency: Currency;
+    public amount: number;
+    public currency: Currency;
 
     constructor(amount: number, currency: Currency) {
         this.amount = amount;

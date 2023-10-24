@@ -3,6 +3,7 @@ import { Bank } from '../src/Bank'
 import { MissingExchangeRateError } from '../src/MissingExchangeRateError'
 import { map } from 'fp-ts/lib/Functor'
 import { threadId } from 'worker_threads'
+import { Money } from './Money.spec'
 
 
 class Portfolio{
@@ -15,7 +16,7 @@ class Portfolio{
     evaluate(currency :Currency ,bank:Bank ): number{
         return this.wallet.reduce((acc,curr)=>{
             if(curr.currency !== currency){
-                return acc+bank.convert(curr.amount,curr.currency,currency)
+                return acc+bank.convert(currency, new Money(curr.amount, curr.currency))
             }
             return acc+curr.amount;
         },0)
