@@ -11,7 +11,7 @@ export class DifferentCurrencyError extends Error {
 }
 
 
-class Money {
+export class Money {
 
     private amount: number;
     private currency: Currency;
@@ -26,6 +26,14 @@ class Money {
             throw new DifferentCurrencyError(this.currency,money.currency);
         }
         return new Money(this.amount + money.amount, this.currency);
+    }
+    times(value:number): Money {
+    
+        return new Money(this.amount * value, this.currency);
+    }
+    divide(value:number): Money {
+    
+        return new Money(this.amount / value, this.currency);
     }
 }
 
@@ -45,11 +53,33 @@ describe('Money', () => {
         expect(money).toEqual(new Money(5, Currency.USD));
     })
 
-    test('should add money when currency is different', () => {
+    test('should not add money when currency is different', () => {
         const money: Money = new Money(5, Currency.EUR);
 
         expect(() => money.add(new Money(10, Currency.USD)))
             .toThrow(DifferentCurrencyError)
     })
+  
+    
+    test('should times money when currency is same', () => {
+        const money: Money = new Money(5, Currency.USD);
+        const times = money.times(10);
+
+        expect(times).toEqual(new Money(50, Currency.USD));
+        expect(money).toEqual(new Money(5, Currency.USD));
+    })
+
+
+
+    test('should divide money when currency is same', () => {
+        const money: Money = new Money(50, Currency.USD);
+        const divide = money.divide(10);
+
+        expect(divide).toEqual(new Money(5, Currency.USD));
+        expect(money).toEqual(new Money(50, Currency.USD));
+    })
+
+
+
 })
 
