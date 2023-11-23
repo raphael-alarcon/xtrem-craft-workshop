@@ -41,11 +41,11 @@ export class Bank {
    * 
    * @return {number} the convertion result 
    */
-  convert(convertedCurrency: Currency, money: Money): number {
+  convert(convertedCurrency: Currency, money: Money): Money {
     if (!(money.currency === convertedCurrency || this._exchangeRates.has(money.currency + '->' + convertedCurrency))) { throw new MissingExchangeRateError(money.currency, convertedCurrency) }
 
-    return convertedCurrency === money.currency
-      ? money.amount
-      : money.amount * this._exchangeRates.get(money.currency + '->' + convertedCurrency)
+    return money.hasCurrency(convertedCurrency)
+    ? money
+    : money.convert(this._exchangeRates.get(money.currency + '->' + convertedCurrency), convertedCurrency);
   }
 }

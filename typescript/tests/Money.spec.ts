@@ -35,6 +35,12 @@ export class Money {
     
         return new Money(this.amount / value, this.currency);
     }
+    hasCurrency(convertedCurrency: Currency): Boolean {
+        return this.currency === convertedCurrency;
+    }
+    convert(rate: number, convertedCurrency: Currency): Money {
+        return new Money(this.amount * rate, convertedCurrency);
+    }
 }
 
 

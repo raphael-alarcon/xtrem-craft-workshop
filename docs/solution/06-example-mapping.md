@@ -19,6 +19,29 @@ Vous pouvez également joindre une photo du résultat obtenu en utilisant les po
 
 ## Évaluation d'un portefeuille
 
+> Qu'est ce qu'il se passe si le taux de change n'est pas renseigné 
+
+### Evaluer quand la devise est différente
+
+- 5 USD, 10 EUR
+- TC : EUR -> USD : 12
+- evaluate USD 
+
+### Evaluer quand la devise est la meme 
+
+- 5 USD, 10 USD 
+- evaluate USD : 15 USD
+
+### Evaluer quand le taux de change n'est pas renseigné 
+
+- message d'erreur 
+
+### Evaluer vers une devise qui n'est pas dans le portfolio 
+
+- 5 USD, 10 EUR
+- EUR + USD -> KRW 
+
+
 
 
 
