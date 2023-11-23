@@ -28,13 +28,13 @@ class BankBuilder {
     return this; 
   }
 
-  build(){
+  build(): Bank{
     const bank = Bank.withExchangeRate(this.pivotCurrency, this.exchangeRates[0].currency, this.exchangeRates[0].rate);
     this.exchangeRates.forEach(exchangeRates => {
       bank.addExchangeRate(this.pivotCurrency, exchangeRates.currency, exchangeRates.rate);
       bank.addExchangeRate(exchangeRates.currency, this.pivotCurrency, 1/exchangeRates.rate);
     }); 
-    return Bank; 
+    return bank; 
   }
 }
 
@@ -44,19 +44,19 @@ class BankBuilder {
 describe('Bank', function () {
 
   test('convert from eur to usd returns number', () => {
-    const myBank = Bank.withExchangeRate(Currency.EUR, Currency.USD, 1.2)
+    const myBank = BankBuilder.aEuropeanBank().withExchangeRate(Currency.USD, 1.2).build()
 
-    expect(myBank.convert(Currency.USD, new Money(10, Currency.EUR))["amount"]).toBe(12)
+    expect(myBank.convert(Currency.USD, new Money(10, Currency.EUR))).toBe(12)
   })
 
   test('convert from current money to the same money returns same value', () => {
-    const myBank = Bank.withExchangeRate(Currency.EUR, Currency.USD, 1.2)
+    const myBank = BankBuilder.aEuropeanBank().withExchangeRate( Currency.USD, 1.2).build()
     
     expect(myBank.convert(Currency.EUR, new Money(10, Currency.EUR))["amount"]).toBe(10)
   })
 
   test('convert throws error in case of missing exchange rates', () => {
-    const myBank = Bank.withExchangeRate(Currency.EUR, Currency.USD, 1.2)
+    const myBank = BankBuilder.aEuropeanBank().withExchangeRate( Currency.USD, 1.2).build()
     
     expect(() => myBank.convert(Currency.KRW, new Money(10, Currency.EUR)))
       .toThrow(MissingExchangeRateError)
@@ -64,9 +64,9 @@ describe('Bank', function () {
   })
 
   test('convert with different exchange rates returns different numbers', () => {
-    const myBank = Bank.withExchangeRate(Currency.EUR, Currency.USD, 1.2)
-    const myBank2 = Bank.withExchangeRate(Currency.EUR, Currency.USD, 1.3)
-    const myBank3 = Bank.withExchangeRate(Currency.EUR, Currency.USD, 1.5)
+    const myBank = BankBuilder.aEuropeanBank().withExchangeRate( Currency.USD, 1.2).build()
+    const myBank2 = BankBuilder.aEuropeanBank().withExchangeRate( Currency.USD, 1.3).build()
+    const myBank3 = BankBuilder.aEuropeanBank().withExchangeRate( Currency.USD, 1.5).build()
     
     expect(myBank.convert(Currency.USD, new Money(10, Currency.EUR))["amount"]).toBe(12)
     expect(myBank2.convert(Currency.USD, new Money(10, Currency.EUR))["amount"]).toBe(13)
