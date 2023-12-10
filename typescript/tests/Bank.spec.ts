@@ -24,12 +24,12 @@ class BankBuilder {
   }
 
   withExchangeRate(currency: Currency, rate: number): BankBuilder {
-    this.exchangeRates.push(currency, rate);
+    this.exchangeRates.push({currency, rate});
     return this; 
   }
 
   build(): Bank{
-    const bank = Bank.withExchangeRate(this.pivotCurrency, this.exchangeRates[0].currency, this.exchangeRates[0].rate);
+    const bank = new Bank();
     this.exchangeRates.forEach(exchangeRates => {
       bank.addExchangeRate(this.pivotCurrency, exchangeRates.currency, exchangeRates.rate);
       bank.addExchangeRate(exchangeRates.currency, this.pivotCurrency, 1/exchangeRates.rate);
@@ -45,8 +45,7 @@ describe('Bank', function () {
 
   test('convert from eur to usd returns number', () => {
     const myBank = BankBuilder.aEuropeanBank().withExchangeRate(Currency.USD, 1.2).build()
-
-    expect(myBank.convert(Currency.USD, new Money(10, Currency.EUR))).toBe(12)
+    expect(myBank.convert(Currency.USD, new Money(10, Currency.EUR))["amount"]).toBe(12)
   })
 
   test('convert from current money to the same money returns same value', () => {
